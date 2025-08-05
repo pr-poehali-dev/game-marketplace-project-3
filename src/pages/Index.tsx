@@ -5,6 +5,11 @@ import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Icon from '@/components/ui/icon';
 
 interface Product {
@@ -16,85 +21,35 @@ interface Product {
   description: string;
   rating: number;
   inStock: boolean;
+  seller: string;
+  sellerRating: number;
 }
 
 interface CartItem extends Product {
   quantity: number;
 }
 
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 1,
-    title: "Cyberpunk 2077",
-    price: 2499,
-    category: "Игры",
-    image: "🎮",
-    description: "Футуристическая RPG в мире киберпанка",
-    rating: 4.5,
-    inStock: true
-  },
-  {
-    id: 2,
-    title: "Редкий скин AK-47",
-    price: 15000,
-    category: "Предметы",
-    image: "🔫",
-    description: "Легендарный скин для CS:GO",
-    rating: 5.0,
-    inStock: true
-  },
-  {
-    id: 3,
-    title: "1000 V-Bucks",
-    price: 799,
-    category: "Валюта",
-    image: "💎",
-    description: "Игровая валюта Fortnite",
-    rating: 4.8,
-    inStock: true
-  },
-  {
-    id: 4,
-    title: "Буст до Глобала",
-    price: 5000,
-    category: "Услуги",
-    image: "🚀",
-    description: "Профессиональный буст в CS:GO",
-    rating: 4.2,
-    inStock: true
-  },
-  {
-    id: 5,
-    title: "FIFA 24 Ultimate Edition",
-    price: 4999,
-    category: "Игры",
-    image: "⚽",
-    description: "Полная версия с дополнениями",
-    rating: 4.6,
-    inStock: false
-  },
-  {
-    id: 6,
-    title: "Gaming Headset RGB",
-    price: 8999,
-    category: "Аксессуары",
-    image: "🎧",
-    description: "Профессиональная гарнитура с RGB",
-    rating: 4.7,
-    inStock: true
-  }
-];
+const INITIAL_PRODUCTS: Product[] = [];
 
 export default function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [balance, setBalance] = useState(50000);
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    title: '',
+    price: '',
+    category: '',
+    description: '',
+    image: ''
+  });
 
-  const categories = ['Все', 'Игры', 'Предметы', 'Валюта', 'Услуги', 'Аксессуары'];
+  const categories = ['Все', 'Игры PC', 'Игры Console', 'Мобильные игры', 'Внутриигровые предметы', 'Игровая валюта', 'Буст услуги', 'Gaming оборудование', 'Аксессуары', 'Стримерские товары', 'Коллекционные предметы'];
 
   const filteredProducts = selectedCategory === 'Все' 
-    ? MOCK_PRODUCTS 
-    : MOCK_PRODUCTS.filter(product => product.category === selectedCategory);
+    ? products 
+    : products.filter(product => product.category === selectedCategory);
 
   const addToCart = (product: Product) => {
     const existingItem = cart.find(item => item.id === product.id);
@@ -144,6 +99,40 @@ export default function Index() {
     }
   };
 
+  const addProduct = () => {
+    if (!newProduct.title || !newProduct.price || !newProduct.category || !newProduct.description) {
+      alert('Заполните все поля!');
+      return;
+    }
+
+    const product: Product = {
+      id: Date.now(),
+      title: newProduct.title,
+      price: parseInt(newProduct.price),
+      category: newProduct.category,
+      description: newProduct.description,
+      image: newProduct.image || `/img/29e667f3-99c7-469a-aac6-ac7f5397b77c.jpg`,
+      rating: 5.0,
+      inStock: true,
+      seller: 'Вы',
+      sellerRating: 4.9
+    };
+
+    setProducts([...products, product]);
+    setNewProduct({ title: '', price: '', category: '', description: '', image: '' });
+    setIsAddProductOpen(false);
+    alert('Товар успешно добавлен! 🎉');
+  };
+
+  const getProductImage = (product: Product, index: number) => {
+    const images = [
+      '/img/29e667f3-99c7-469a-aac6-ac7f5397b77c.jpg',
+      '/img/756b7e68-11f7-494f-bf7e-1b3fa863dc92.jpg', 
+      '/img/d7adacaf-52bd-49a6-bbdc-3dfd158a7d9f.jpg'
+    ];
+    return product.image || images[index % images.length];
+  };
+
   return (
     <div className="min-h-screen bg-gaming-darker">
       {/* Header */}
@@ -167,6 +156,86 @@ export default function Index() {
                   {balance.toLocaleString()} ₽
                 </span>
               </div>
+
+              {/* Add Product */}
+              <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-neon-pink text-white hover:bg-neon-pink/80">
+                    <Icon name="Plus" size={16} className="mr-2" />
+                    Продать товар
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-gaming-dark border-neon-green/20 text-white">
+                  <DialogHeader>
+                    <DialogTitle className="text-neon-green font-orbitron">Добавить товар</DialogTitle>
+                    <DialogDescription className="text-gray-400">
+                      Заполните информацию о вашем товаре
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="title" className="text-white">Название товара</Label>
+                      <Input
+                        id="title"
+                        value={newProduct.title}
+                        onChange={(e) => setNewProduct({...newProduct, title: e.target.value})}
+                        className="bg-gaming-light border-gaming-gray text-white"
+                        placeholder="Введите название"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="price" className="text-white">Цена (₽)</Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        value={newProduct.price}
+                        onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                        className="bg-gaming-light border-gaming-gray text-white"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="category" className="text-white">Категория</Label>
+                      <Select value={newProduct.category} onValueChange={(value) => setNewProduct({...newProduct, category: value})}>
+                        <SelectTrigger className="bg-gaming-light border-gaming-gray text-white">
+                          <SelectValue placeholder="Выберите категорию" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gaming-dark border-gaming-gray">
+                          {categories.slice(1).map(cat => (
+                            <SelectItem key={cat} value={cat} className="text-white hover:bg-gaming-light">{cat}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="description" className="text-white">Описание</Label>
+                      <Textarea
+                        id="description"
+                        value={newProduct.description}
+                        onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
+                        className="bg-gaming-light border-gaming-gray text-white"
+                        placeholder="Опишите ваш товар"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="image" className="text-white">Ссылка на изображение (необязательно)</Label>
+                      <Input
+                        id="image"
+                        value={newProduct.image}
+                        onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
+                        className="bg-gaming-light border-gaming-gray text-white"
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <Button 
+                      onClick={addProduct}
+                      className="w-full bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
+                    >
+                      Добавить товар
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               {/* Cart */}
               <Sheet>
@@ -200,7 +269,11 @@ export default function Index() {
                         {cart.map(item => (
                           <div key={item.id} className="flex items-center justify-between p-3 bg-gaming-light rounded-lg">
                             <div className="flex items-center space-x-3">
-                              <span className="text-2xl">{item.image}</span>
+                              <img 
+                                src={getProductImage(item, 0)}
+                                alt={item.title}
+                                className="w-12 h-12 object-cover rounded"
+                              />
                               <div>
                                 <p className="font-medium text-white">{item.title}</p>
                                 <p className="text-sm text-gray-400">{item.price.toLocaleString()} ₽</p>
@@ -284,12 +357,12 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
             <div className="flex justify-center mb-8">
-              <TabsList className="bg-gaming-light border border-gaming-gray">
+              <TabsList className="bg-gaming-light border border-gaming-gray flex-wrap">
                 {categories.map(category => (
                   <TabsTrigger 
                     key={category} 
                     value={category}
-                    className="text-gray-300 data-[state=active]:text-neon-green data-[state=active]:bg-gaming-dark"
+                    className="text-gray-300 data-[state=active]:text-neon-green data-[state=active]:bg-gaming-dark text-xs"
                   >
                     {category}
                   </TabsTrigger>
@@ -298,87 +371,94 @@ export default function Index() {
             </div>
 
             <TabsContent value={selectedCategory} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map(product => (
-                  <Card key={product.id} className="gaming-card border-gaming-gray">
-                    <CardHeader className="pb-4">
-                      <div className="flex justify-between items-start">
-                        <div className="text-4xl mb-2">{product.image}</div>
-                        <Badge 
-                          variant={product.inStock ? "default" : "destructive"}
-                          className={product.inStock ? "bg-neon-green text-black" : ""}
-                        >
-                          {product.inStock ? "В наличии" : "Нет в наличии"}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-white font-orbitron">
-                        {product.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-400">
-                        {product.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between items-center mb-4">
-                        <div className="flex items-center space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Icon 
-                              key={i}
-                              name="Star" 
-                              size={16} 
-                              className={i < Math.floor(product.rating) ? "text-neon-green fill-current" : "text-gray-600"}
-                            />
-                          ))}
-                          <span className="text-sm text-gray-400 ml-2">{product.rating}</span>
+              {filteredProducts.length === 0 ? (
+                <div className="text-center py-12">
+                  <Icon name="Package" size={64} className="text-gray-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-orbitron text-gray-400 mb-2">Пока нет товаров</h3>
+                  <p className="text-gray-500 mb-4">Станьте первым, кто добавит товар в эту категорию!</p>
+                  <Button 
+                    onClick={() => setIsAddProductOpen(true)}
+                    className="bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
+                  >
+                    <Icon name="Plus" size={16} className="mr-2" />
+                    Добавить товар
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((product, index) => (
+                    <Card key={product.id} className="gaming-card border-gaming-gray">
+                      <CardHeader className="pb-4">
+                        <div className="relative mb-4">
+                          <img 
+                            src={getProductImage(product, index)}
+                            alt={product.title}
+                            className="w-full h-48 object-cover rounded-lg"
+                          />
+                          <Badge 
+                            variant={product.inStock ? "default" : "destructive"}
+                            className={`absolute top-2 right-2 ${product.inStock ? "bg-neon-green text-black" : ""}`}
+                          >
+                            {product.inStock ? "В наличии" : "Нет в наличии"}
+                          </Badge>
                         </div>
-                        <Badge variant="secondary" className="bg-gaming-light text-neon-pink">
-                          {product.category}
-                        </Badge>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span className="text-2xl font-orbitron text-neon-green">
-                          {product.price.toLocaleString()} ₽
-                        </span>
-                        <Button 
-                          onClick={() => addToCart(product)}
-                          disabled={!product.inStock}
-                          className="bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
-                        >
-                          <Icon name="Plus" size={16} className="mr-2" />
-                          В корзину
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        <CardTitle className="text-white font-orbitron">
+                          {product.title}
+                        </CardTitle> 
+                        <CardDescription className="text-gray-400">
+                          {product.description}
+                        </CardDescription>
+                        <div className="flex items-center space-x-2 mt-2">
+                          <Avatar className="w-6 h-6">
+                            <AvatarFallback className="bg-neon-pink text-white text-xs">
+                              {product.seller[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm text-gray-400">{product.seller}</span>
+                          <div className="flex items-center space-x-1">
+                            <Icon name="Star" size={12} className="text-neon-green fill-current" />
+                            <span className="text-xs text-gray-400">{product.sellerRating}</span>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex justify-between items-center mb-4">
+                          <div className="flex items-center space-x-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Icon 
+                                key={i}
+                                name="Star" 
+                                size={16} 
+                                className={i < Math.floor(product.rating) ? "text-neon-green fill-current" : "text-gray-600"}
+                              />
+                            ))}
+                            <span className="text-sm text-gray-400 ml-2">{product.rating}</span>
+                          </div>
+                          <Badge variant="secondary" className="bg-gaming-light text-neon-pink">
+                            {product.category}
+                          </Badge>
+                        </div>
+                        
+                        <div className="flex justify-between items-center">
+                          <span className="text-2xl font-orbitron text-neon-green">
+                            {product.price.toLocaleString()} ₽
+                          </span>
+                          <Button 
+                            onClick={() => addToCart(product)}
+                            disabled={!product.inStock}
+                            className="bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
+                          >
+                            <Icon name="Plus" size={16} className="mr-2" />
+                            В корзину
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </TabsContent>
           </Tabs>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-12 bg-gaming-dark">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-orbitron text-neon-green mb-2">10K+</div>
-              <div className="text-gray-400">Товаров</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-orbitron text-neon-pink mb-2">50K+</div>
-              <div className="text-gray-400">Пользователей</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-orbitron text-neon-green mb-2">24/7</div>
-              <div className="text-gray-400">Поддержка</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-orbitron text-neon-pink mb-2">99%</div>
-              <div className="text-gray-400">Довольных</div>
-            </div>
-          </div>
         </div>
       </section>
 
