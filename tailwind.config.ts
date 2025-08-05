@@ -61,6 +61,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				neon: {
+					green: '#00FF41',
+					pink: '#FF0080',
+					blue: '#00D4FF',
+					purple: '#8B5CF6'
+				},
+				gaming: {
+					dark: '#2D2D2D',
+					darker: '#1A1A1A',
+					light: '#3A3A3A',
+					gray: '#666666'
 				}
 			},
 			borderRadius: {
