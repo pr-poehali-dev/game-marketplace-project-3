@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 0 0% 7%;
+    --background: 222 84% 3%;
     --foreground: 0 0% 95%;
 
-    --card: 0 0% 12%;
+    --card: 222 84% 6%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 12%;
+    --popover: 222 84% 6%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 125 100% 50%;
-    --primary-foreground: 0 0% 5%;
+    --primary: 60 100% 50%;
+    --primary-foreground: 222 84% 4.9%;
 
-    --secondary: 317 100% 50%;
+    --secondary: 350 100% 50%;
     --secondary-foreground: 0 0% 95%;
 
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 222 84% 12%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 125 100% 50%;
-    --accent-foreground: 0 0% 5%;
+    --accent: 60 100% 50%;
+    --accent-foreground: 222 84% 4.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 95%;
 
-    --border: 0 0% 25%;
-    --input: 0 0% 20%;
-    --ring: 125 100% 50%;
+    --border: 222 84% 16%;
+    --input: 222 84% 12%;
+    --ring: 60 100% 50%;
 
-    --radius: 1.5rem;
+    --radius: 4px;
 
-    --sidebar-background: 0 0% 7%;
+    --sidebar-background: 222 84% 3%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 125 100% 50%;
-    --sidebar-primary-foreground: 0 0% 5%;
-    --sidebar-accent: 0 0% 15%;
+    --sidebar-primary: 60 100% 50%;
+    --sidebar-primary-foreground: 222 84% 4.9%;
+    --sidebar-accent: 222 84% 12%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 25%;
-    --sidebar-ring: 125 100% 50%;
+    --sidebar-border: 222 84% 16%;
+    --sidebar-ring: 60 100% 50%;
   }
 }
 
@@ -60,33 +60,160 @@
   .font-orbitron {
     font-family: "Orbitron", monospace;
   }
+
+  .font-cyber {
+    font-family: "Orbitron", monospace;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
 }
 
 @layer components {
-  .neon-glow {
+  .cyber-glow {
     box-shadow:
-      0 0 10px theme("colors.neon.green"),
-      0 0 20px theme("colors.neon.green"),
-      0 0 30px theme("colors.neon.green");
+      0 0 10px theme("colors.cyberpunk.yellow"),
+      0 0 20px theme("colors.cyberpunk.yellow"),
+      0 0 30px theme("colors.cyberpunk.yellow");
   }
 
-  .neon-border {
-    border: 1px solid theme("colors.neon.green");
-    box-shadow: 0 0 5px theme("colors.neon.green");
+  .cyber-border {
+    border: 1px solid theme("colors.cyberpunk.yellow");
+    box-shadow: 0 0 8px theme("colors.cyberpunk.yellow");
+    position: relative;
   }
 
-  .gaming-card {
+  .cyber-border::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(
+      45deg,
+      theme("colors.cyberpunk.yellow"),
+      theme("colors.cyberpunk.blue"),
+      theme("colors.cyberpunk.pink")
+    );
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.7;
+    filter: blur(4px);
+  }
+
+  .cyber-card {
     background: linear-gradient(
       135deg,
-      theme("colors.gaming.dark") 0%,
-      theme("colors.gaming.light") 100%
+      theme("colors.dark.card") 0%,
+      theme("colors.dark.panel") 100%
     );
-    border: 1px solid theme("colors.gaming.gray");
+    border: 1px solid theme("colors.dark.border");
+    border-left: 3px solid theme("colors.cyberpunk.yellow");
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .cyber-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow:
+      0 10px 30px rgba(252, 227, 0, 0.3),
+      0 0 20px rgba(252, 227, 0, 0.1);
+    border-left-color: theme("colors.cyberpunk.blue");
+  }
+
+  .cyber-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      theme("colors.cyberpunk.yellow"),
+      transparent
+    );
+    animation: scan 3s linear infinite;
+  }
+
+  .glitch-text {
+    position: relative;
+    color: theme("colors.cyberpunk.yellow");
+    text-shadow:
+      0.05em 0 0 theme("colors.cyberpunk.pink"),
+      -0.05em -0.025em 0 theme("colors.cyberpunk.blue"),
+      0.025em 0.05em 0 theme("colors.cyberpunk.green");
+    animation: glitch 2s infinite;
+  }
+
+  .cyber-button {
+    background: linear-gradient(
+      45deg,
+      theme("colors.cyberpunk.yellow"),
+      theme("colors.cyberpunk.blue")
+    );
+    border: none;
+    color: black;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
     transition: all 0.3s ease;
   }
 
-  .gaming-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
+  .cyber-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  .cyber-button:hover::before {
+    left: 100%;
+  }
+
+  .cyber-button:hover {
+    box-shadow: 0 0 20px theme("colors.cyberpunk.yellow");
+    transform: translateY(-2px);
+  }
+
+  .scan-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100vh;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      theme("colors.cyberpunk.blue"),
+      transparent
+    );
+    animation: scan 2s linear infinite;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  .hologram {
+    background: linear-gradient(
+      135deg,
+      rgba(0, 245, 255, 0.1),
+      rgba(252, 227, 0, 0.1),
+      rgba(255, 0, 60, 0.1)
+    );
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(252, 227, 0, 0.3);
   }
 }

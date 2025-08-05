@@ -145,40 +145,42 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-gaming-darker">
+    <div className="min-h-screen bg-dark-bg relative overflow-hidden">
+      {/* Cyberpunk scan line */}
+      <div className="scan-line"></div>
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-gaming-dark/95 backdrop-blur-sm border-b border-neon-green/20">
+      <header className="sticky top-0 z-50 bg-dark-card/95 backdrop-blur-sm border-b border-cyberpunk-yellow/30 hologram">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-orbitron font-bold text-neon-green">
+              <h1 className="text-2xl font-cyber glitch-text animate-flicker">
                 CYBER MARKET
               </h1>
-              <Badge variant="secondary" className="bg-neon-pink text-white">
-                BETA
+              <Badge variant="secondary" className="bg-cyberpunk-pink text-white animate-pulse-slow">
+                2077
               </Badge>
             </div>
             
             <div className="flex items-center space-x-4">
               {/* Balance */}
-              <div className="flex items-center space-x-2 bg-gaming-light px-3 py-2 rounded-lg">
-                <Icon name="Wallet" size={20} className="text-neon-green" />
-                <span className="font-orbitron text-white">
-                  {balance.toLocaleString()} ₽
+              <div className="flex items-center space-x-2 bg-dark-panel px-4 py-2 rounded-cyber cyber-border">
+                <Icon name="Wallet" size={20} className="text-cyberpunk-yellow animate-pulse" />
+                <span className="font-cyber text-cyberpunk-yellow">
+                  {balance.toLocaleString()} ¥
                 </span>
               </div>
 
               {/* Add Product */}
               <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-neon-pink text-white hover:bg-neon-pink/80">
+                  <Button className="cyber-button">
                     <Icon name="Plus" size={16} className="mr-2" />
-                    Продать товар
+                    SELL ITEM
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-gaming-dark border-neon-green/20 text-white">
+                <DialogContent className="bg-dark-card cyber-border text-dark-text hologram">
                   <DialogHeader>
-                    <DialogTitle className="text-neon-green font-orbitron">Добавить товар</DialogTitle>
+                    <DialogTitle className="text-cyberpunk-yellow font-cyber glitch-text">ADD ITEM</DialogTitle>
                     <DialogDescription className="text-gray-400">
                       Заполните информацию о вашем товаре
                     </DialogDescription>
@@ -213,7 +215,7 @@ export default function Index() {
                         </SelectTrigger>
                         <SelectContent className="bg-gaming-dark border-gaming-gray">
                           {categories.slice(1).map(cat => (
-                            <SelectItem key={cat} value={cat} className="text-white hover:bg-gaming-light">{cat}</SelectItem>
+                            <SelectItem key={cat} value={cat} className="text-dark-text hover:bg-dark-panel">{cat}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -242,7 +244,7 @@ export default function Index() {
                       onClick={addProduct}
                       className="w-full bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
                     >
-                      Добавить товар
+                      DEPLOY ITEM
                     </Button>
                   </div>
                 </DialogContent>
@@ -251,34 +253,34 @@ export default function Index() {
               {/* Cart */}
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="relative neon-border">
+                  <Button variant="outline" className="relative cyber-border bg-dark-panel hover:bg-dark-card">
                     <Icon name="ShoppingCart" size={20} />
                     {getTotalItems() > 0 && (
-                      <Badge className="absolute -top-2 -right-2 bg-neon-pink text-white text-xs">
+                      <Badge className="absolute -top-2 -right-2 bg-cyberpunk-pink text-white text-xs animate-pulse">
                         {getTotalItems()}
                       </Badge>
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent className="bg-gaming-dark border-neon-green/20">
+                <SheetContent className="bg-dark-card cyber-border hologram">
                   <SheetHeader>
-                    <SheetTitle className="text-neon-green font-orbitron">
+                    <SheetTitle className="text-cyberpunk-yellow font-cyber glitch-text">
                       Корзина
                     </SheetTitle>
-                    <SheetDescription className="text-gray-400">
-                      Ваши товары к покупке
+                    <SheetDescription className="text-dark-text/70">
+                      Your selected items
                     </SheetDescription>
                   </SheetHeader>
                   
                   <div className="mt-6 space-y-4">
                     {cart.length === 0 ? (
-                      <p className="text-gray-400 text-center py-8">
-                        Корзина пуста
+                      <p className="text-dark-text/70 text-center py-8 font-cyber">
+                        CART EMPTY
                       </p>
                     ) : (
                       <>
                         {cart.map(item => (
-                          <div key={item.id} className="flex items-center justify-between p-3 bg-gaming-light rounded-lg">
+                          <div key={item.id} className="flex items-center justify-between p-3 bg-dark-panel rounded-cyber cyber-border">
                             <div className="flex items-center space-x-3">
                               <img 
                                 src={getProductImage(item, 0)}
@@ -286,8 +288,8 @@ export default function Index() {
                                 className="w-12 h-12 object-cover rounded"
                               />
                               <div>
-                                <p className="font-medium text-white">{item.title}</p>
-                                <p className="text-sm text-gray-400">{item.price.toLocaleString()} ₽</p>
+                                <p className="font-cyber text-cyberpunk-yellow">{item.title}</p>
+                                <p className="text-sm text-dark-text/70">{item.price.toLocaleString()} ¥</p>
                               </div>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -299,7 +301,7 @@ export default function Index() {
                               >
                                 -
                               </Button>
-                              <span className="text-white w-8 text-center">{item.quantity}</span>
+                              <span className="text-cyberpunk-yellow w-8 text-center font-cyber">{item.quantity}</span>
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -314,17 +316,17 @@ export default function Index() {
                         
                         <div className="border-t border-gray-600 pt-4">
                           <div className="flex justify-between items-center mb-4">
-                            <span className="font-orbitron text-lg text-white">Итого:</span>
-                            <span className="font-orbitron text-xl text-neon-green">
-                              {getTotalPrice().toLocaleString()} ₽
+                            <span className="font-cyber text-lg text-dark-text">TOTAL:</span>
+                            <span className="font-cyber text-xl text-cyberpunk-yellow glitch-text">
+                              {getTotalPrice().toLocaleString()} ¥
                             </span>
                           </div>
                           <Button 
                             onClick={checkout}
-                            className="w-full bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
+                            className="w-full cyber-button font-cyber"
                             disabled={getTotalPrice() > balance}
                           >
-                            {getTotalPrice() > balance ? 'Недостаточно средств' : 'Купить'}
+                            {getTotalPrice() > balance ? 'INSUFFICIENT FUNDS' : 'PURCHASE'}
                           </Button>
                         </div>
                       </>
@@ -336,14 +338,14 @@ export default function Index() {
               {/* Profile */}
               <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
                 <DialogTrigger asChild>
-                  <Avatar className="cursor-pointer hover:ring-2 hover:ring-neon-green transition-all">
+                  <Avatar className="cursor-pointer hover:ring-2 hover:ring-cyberpunk-yellow transition-all cyber-glow">
                     <AvatarImage src="/api/placeholder/40/40" />
-                    <AvatarFallback className="bg-neon-pink text-white">GT</AvatarFallback>
+                    <AvatarFallback className="bg-cyberpunk-pink text-white font-cyber">GT</AvatarFallback>
                   </Avatar>
                 </DialogTrigger>
-                <DialogContent className="bg-gaming-dark border-neon-green/20 text-white max-w-md">
+                <DialogContent className="bg-dark-card cyber-border text-dark-text max-w-md hologram">
                   <DialogHeader>
-                    <DialogTitle className="text-neon-green font-orbitron">Личный кабинет</DialogTitle>
+                    <DialogTitle className="text-cyberpunk-yellow font-cyber glitch-text">USER PROFILE</DialogTitle>
                     <DialogDescription className="text-gray-400">
                       Управление профилем и настройками
                     </DialogDescription>
@@ -353,14 +355,14 @@ export default function Index() {
                     <div className="flex items-center space-x-4 p-4 bg-gaming-light rounded-lg">
                       <Avatar className="w-16 h-16">
                         <AvatarImage src="/api/placeholder/64/64" />
-                        <AvatarFallback className="bg-neon-pink text-white text-xl">GT</AvatarFallback>
+                        <AvatarFallback className="bg-cyberpunk-pink text-white text-xl font-cyber">GT</AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="font-orbitron text-white text-lg">{userProfile.name}</h3>
-                        <p className="text-gray-400 text-sm">{userProfile.email}</p>
+                        <h3 className="font-cyber text-cyberpunk-yellow text-lg">{userProfile.name}</h3>
+                        <p className="text-dark-text/70 text-sm">{userProfile.email}</p>
                         <div className="flex items-center space-x-1 mt-1">
-                          <Icon name="Star" size={14} className="text-neon-green fill-current" />
-                          <span className="text-sm text-gray-400">{userProfile.reputation} рейтинг</span>
+                          <Icon name="Star" size={14} className="text-cyberpunk-yellow fill-current animate-pulse" />
+                          <span className="text-sm text-dark-text/70">{userProfile.reputation} RATING</span>
                         </div>
                       </div>
                     </div>
@@ -368,18 +370,18 @@ export default function Index() {
                     {/* Balance */}
                     <div className="p-4 bg-gaming-light rounded-lg">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-400">Баланс</span>
+                        <span className="text-dark-text/70 font-cyber">BALANCE</span>
                         <Button 
                           size="sm" 
-                          className="bg-neon-green text-black hover:bg-neon-green/80 text-xs"
+                          className="cyber-button text-xs"
                         >
-                          Пополнить
+                          TOP UP
                         </Button>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Icon name="Wallet" size={20} className="text-neon-green" />
-                        <span className="font-orbitron text-xl text-neon-green">
-                          {balance.toLocaleString()} ₽
+                        <Icon name="Wallet" size={20} className="text-cyberpunk-yellow animate-pulse" />
+                        <span className="font-cyber text-xl text-cyberpunk-yellow glitch-text">
+                          {balance.toLocaleString()} ¥
                         </span>
                       </div>
                     </div>
@@ -399,7 +401,7 @@ export default function Index() {
                     {/* Profile Settings */}
                     <div className="space-y-3">
                       <div>
-                        <Label htmlFor="profile-name" className="text-white text-sm">Имя пользователя</Label>
+                        <Label htmlFor="profile-name" className="text-dark-text text-sm font-cyber">USERNAME</Label>
                         <Input
                           id="profile-name" 
                           value={userProfile.name}
@@ -408,7 +410,7 @@ export default function Index() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="profile-email" className="text-white text-sm">Email</Label>
+                        <Label htmlFor="profile-email" className="text-dark-text text-sm font-cyber">EMAIL</Label>
                         <Input
                           id="profile-email"
                           value={userProfile.email}
@@ -421,17 +423,17 @@ export default function Index() {
                     {/* Action Buttons */}
                     <div className="flex space-x-2">
                       <Button 
-                        className="flex-1 bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
-                        onClick={() => alert('Профиль сохранен! 💾')}
+                        className="flex-1 cyber-button font-cyber"
+                        onClick={() => alert('PROFILE SAVED! 💾')}
                       >
-                        Сохранить
+                        SAVE
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="flex-1 neon-border text-neon-green"
+                        className="flex-1 cyber-border text-cyberpunk-yellow bg-dark-panel hover:bg-dark-card font-cyber"
                         onClick={() => setIsProfileOpen(false)}
                       >
-                        Закрыть
+                        CLOSE
                       </Button>
                     </div>
                   </div>
@@ -443,20 +445,20 @@ export default function Index() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-16 bg-gradient-to-r from-gaming-dark via-gaming-darker to-gaming-dark">
+      <section className="relative py-16 bg-gradient-to-r from-dark-card via-dark-bg to-dark-panel hologram">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-6xl font-orbitron font-bold text-white mb-4">
-            ИГРОВОЙ <span className="text-neon-green">МАРКЕТПЛЕЙС</span>
+          <h2 className="text-4xl md:text-6xl font-cyber font-bold text-dark-text mb-4 glitch-text">
+            CYBER <span className="text-cyberpunk-yellow animate-flicker">MARKETPLACE</span>
           </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Лучшие игры, редкие предметы и профессиональные услуги для геймеров
+          <p className="text-xl text-dark-text/80 mb-8 max-w-2xl mx-auto font-cyber">
+            PREMIUM GAMES, RARE ITEMS & PROFESSIONAL SERVICES FOR GAMERS
           </p>
           <div className="flex justify-center space-x-4">
-            <Button className="bg-neon-green text-black hover:bg-neon-green/80 font-orbitron">
-              Начать покупки
+            <Button className="cyber-button font-cyber mr-4">
+              START SHOPPING
             </Button>
-            <Button variant="outline" className="neon-border text-neon-green">
-              Каталог
+            <Button variant="outline" className="cyber-border text-cyberpunk-yellow bg-dark-panel hover:bg-dark-card font-cyber">
+              CATALOG
             </Button>
           </div>
         </div>
@@ -467,12 +469,12 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
             <div className="flex justify-center mb-8">
-              <TabsList className="bg-gaming-light border border-gaming-gray flex-wrap">
+              <TabsList className="bg-dark-panel border border-cyberpunk-yellow/30 flex-wrap hologram">
                 {categories.map(category => (
                   <TabsTrigger 
                     key={category} 
                     value={category}
-                    className="text-gray-300 data-[state=active]:text-neon-green data-[state=active]:bg-gaming-dark text-xs"
+                    className="text-dark-text/70 data-[state=active]:text-cyberpunk-yellow data-[state=active]:bg-dark-card text-xs font-cyber"
                   >
                     {category}
                   </TabsTrigger>
@@ -483,21 +485,21 @@ export default function Index() {
             <TabsContent value={selectedCategory} className="space-y-6">
               {filteredProducts.length === 0 ? (
                 <div className="text-center py-12">
-                  <Icon name="Package" size={64} className="text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-orbitron text-gray-400 mb-2">Пока нет товаров</h3>
-                  <p className="text-gray-500 mb-4">Станьте первым, кто добавит товар в эту категорию!</p>
+                  <Icon name="Package" size={64} className="text-cyberpunk-yellow/50 mx-auto mb-4 animate-pulse" />
+                  <h3 className="text-xl font-cyber text-cyberpunk-yellow/70 mb-2 glitch-text">NO ITEMS FOUND</h3>
+                  <p className="text-dark-text/50 mb-4 font-cyber">BE THE FIRST TO ADD ITEMS TO THIS CATEGORY!</p>
                   <Button 
                     onClick={() => setIsAddProductOpen(true)}
                     className="bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
                   >
                     <Icon name="Plus" size={16} className="mr-2" />
-                    Добавить товар
+                    ADD ITEM
                   </Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredProducts.map((product, index) => (
-                    <Card key={product.id} className="gaming-card border-gaming-gray">
+                    <Card key={product.id} className="cyber-card border-dark-border">
                       <CardHeader className="pb-4">
                         <div className="relative mb-4">
                           <img 
@@ -507,27 +509,27 @@ export default function Index() {
                           />
                           <Badge 
                             variant={product.inStock ? "default" : "destructive"}
-                            className={`absolute top-2 right-2 ${product.inStock ? "bg-neon-green text-black" : ""}`}
+                            className={`absolute top-2 right-2 font-cyber ${product.inStock ? "bg-cyberpunk-green text-black animate-pulse" : ""}`}
                           >
-                            {product.inStock ? "В наличии" : "Нет в наличии"}
+                            {product.inStock ? "IN STOCK" : "OUT OF STOCK"}
                           </Badge>
                         </div>
-                        <CardTitle className="text-white font-orbitron">
+                        <CardTitle className="text-cyberpunk-yellow font-cyber glitch-text">
                           {product.title}
                         </CardTitle> 
-                        <CardDescription className="text-gray-400">
+                        <CardDescription className="text-dark-text/70">
                           {product.description}
                         </CardDescription>
                         <div className="flex items-center space-x-2 mt-2">
                           <Avatar className="w-6 h-6">
-                            <AvatarFallback className="bg-neon-pink text-white text-xs">
+                            <AvatarFallback className="bg-cyberpunk-pink text-white text-xs font-cyber">
                               {product.seller[0]}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="text-sm text-gray-400">{product.seller}</span>
+                          <span className="text-sm text-dark-text/70 font-cyber">{product.seller}</span>
                           <div className="flex items-center space-x-1">
-                            <Icon name="Star" size={12} className="text-neon-green fill-current" />
-                            <span className="text-xs text-gray-400">{product.sellerRating}</span>
+                            <Icon name="Star" size={12} className="text-cyberpunk-yellow fill-current animate-pulse" />
+                            <span className="text-xs text-dark-text/70">{product.sellerRating}</span>
                           </div>
                         </div>
                       </CardHeader>
@@ -539,27 +541,27 @@ export default function Index() {
                                 key={i}
                                 name="Star" 
                                 size={16} 
-                                className={i < Math.floor(product.rating) ? "text-neon-green fill-current" : "text-gray-600"}
+                                className={i < Math.floor(product.rating) ? "text-cyberpunk-yellow fill-current animate-pulse" : "text-dark-text/30"}
                               />
                             ))}
-                            <span className="text-sm text-gray-400 ml-2">{product.rating}</span>
+                            <span className="text-sm text-dark-text/70 ml-2">{product.rating}</span>
                           </div>
-                          <Badge variant="secondary" className="bg-gaming-light text-neon-pink">
+                          <Badge variant="secondary" className="bg-dark-panel text-cyberpunk-pink font-cyber">
                             {product.category}
                           </Badge>
                         </div>
                         
                         <div className="flex justify-between items-center">
-                          <span className="text-2xl font-orbitron text-neon-green">
-                            {product.price.toLocaleString()} ₽
+                          <span className="text-2xl font-cyber text-cyberpunk-yellow glitch-text">
+                            {product.price.toLocaleString()} ¥
                           </span>
                           <Button 
                             onClick={() => addToCart(product)}
                             disabled={!product.inStock}
-                            className="bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
+                            className="cyber-button font-cyber"
                           >
                             <Icon name="Plus" size={16} className="mr-2" />
-                            В корзину
+                            ADD TO CART
                           </Button>
                         </div>
                       </CardContent>
@@ -573,17 +575,17 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gaming-darker border-t border-gaming-gray py-8">
+      <footer className="bg-dark-bg border-t border-cyberpunk-yellow/30 py-8 hologram">
         <div className="container mx-auto px-4 text-center">
-          <div className="text-2xl font-orbitron text-neon-green mb-4">CYBER MARKET</div>
-          <p className="text-gray-400 mb-4">
-            Твой гейминг-магазин будущего
+          <div className="text-2xl font-cyber text-cyberpunk-yellow mb-4 glitch-text animate-flicker">CYBER MARKET</div>
+          <p className="text-dark-text/70 mb-4 font-cyber">
+            THE GAMING MARKETPLACE OF THE FUTURE
           </p>
           <div className="flex justify-center space-x-6">
-            <Icon name="Facebook" size={24} className="text-gray-400 hover:text-neon-green cursor-pointer" />
-            <Icon name="Twitter" size={24} className="text-gray-400 hover:text-neon-green cursor-pointer" />
-            <Icon name="Instagram" size={24} className="text-gray-400 hover:text-neon-green cursor-pointer" />
-            <Icon name="Youtube" size={24} className="text-gray-400 hover:text-neon-green cursor-pointer" />
+            <Icon name="Facebook" size={24} className="text-dark-text/50 hover:text-cyberpunk-yellow cursor-pointer transition-all hover:animate-pulse" />
+            <Icon name="Twitter" size={24} className="text-dark-text/50 hover:text-cyberpunk-blue cursor-pointer transition-all hover:animate-pulse" />
+            <Icon name="Instagram" size={24} className="text-dark-text/50 hover:text-cyberpunk-pink cursor-pointer transition-all hover:animate-pulse" />
+            <Icon name="Youtube" size={24} className="text-dark-text/50 hover:text-cyberpunk-red cursor-pointer transition-all hover:animate-pulse" />
           </div>
         </div>
       </footer>
