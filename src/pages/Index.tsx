@@ -34,7 +34,16 @@ const INITIAL_PRODUCTS: Product[] = [];
 export default function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('Все');
-  const [balance, setBalance] = useState(50000);
+  const [balance, setBalance] = useState(10000);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState({
+    name: 'GamerPro',
+    email: 'gamer@cyber.market',
+    joinDate: '2024',
+    totalSales: 0,
+    totalPurchases: 0,
+    reputation: 4.9
+  });
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({
@@ -92,6 +101,7 @@ export default function Index() {
     const total = getTotalPrice();
     if (total <= balance) {
       setBalance(balance - total);
+      setUserProfile({...userProfile, totalPurchases: userProfile.totalPurchases + getTotalItems()});
       setCart([]);
       alert('Покупка совершена успешно! 🎉');
     } else {
@@ -119,6 +129,7 @@ export default function Index() {
     };
 
     setProducts([...products, product]);
+    setUserProfile({...userProfile, totalSales: userProfile.totalSales + 1});
     setNewProduct({ title: '', price: '', category: '', description: '', image: '' });
     setIsAddProductOpen(false);
     alert('Товар успешно добавлен! 🎉');
@@ -323,10 +334,109 @@ export default function Index() {
               </Sheet>
 
               {/* Profile */}
-              <Avatar>
-                <AvatarImage src="/api/placeholder/40/40" />
-                <AvatarFallback className="bg-neon-pink text-white">GT</AvatarFallback>
-              </Avatar>
+              <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+                <DialogTrigger asChild>
+                  <Avatar className="cursor-pointer hover:ring-2 hover:ring-neon-green transition-all">
+                    <AvatarImage src="/api/placeholder/40/40" />
+                    <AvatarFallback className="bg-neon-pink text-white">GT</AvatarFallback>
+                  </Avatar>
+                </DialogTrigger>
+                <DialogContent className="bg-gaming-dark border-neon-green/20 text-white max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="text-neon-green font-orbitron">Личный кабинет</DialogTitle>
+                    <DialogDescription className="text-gray-400">
+                      Управление профилем и настройками
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-6">
+                    {/* Profile Info */}
+                    <div className="flex items-center space-x-4 p-4 bg-gaming-light rounded-lg">
+                      <Avatar className="w-16 h-16">
+                        <AvatarImage src="/api/placeholder/64/64" />
+                        <AvatarFallback className="bg-neon-pink text-white text-xl">GT</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="font-orbitron text-white text-lg">{userProfile.name}</h3>
+                        <p className="text-gray-400 text-sm">{userProfile.email}</p>
+                        <div className="flex items-center space-x-1 mt-1">
+                          <Icon name="Star" size={14} className="text-neon-green fill-current" />
+                          <span className="text-sm text-gray-400">{userProfile.reputation} рейтинг</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Balance */}
+                    <div className="p-4 bg-gaming-light rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-gray-400">Баланс</span>
+                        <Button 
+                          size="sm" 
+                          className="bg-neon-green text-black hover:bg-neon-green/80 text-xs"
+                        >
+                          Пополнить
+                        </Button>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Icon name="Wallet" size={20} className="text-neon-green" />
+                        <span className="font-orbitron text-xl text-neon-green">
+                          {balance.toLocaleString()} ₽
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-3 bg-gaming-light rounded-lg text-center">
+                        <div className="text-lg font-orbitron text-neon-green">{userProfile.totalSales}</div>
+                        <div className="text-xs text-gray-400">Продано</div>
+                      </div>
+                      <div className="p-3 bg-gaming-light rounded-lg text-center">
+                        <div className="text-lg font-orbitron text-neon-pink">{userProfile.totalPurchases}</div>
+                        <div className="text-xs text-gray-400">Куплено</div>
+                      </div>
+                    </div>
+
+                    {/* Profile Settings */}
+                    <div className="space-y-3">
+                      <div>
+                        <Label htmlFor="profile-name" className="text-white text-sm">Имя пользователя</Label>
+                        <Input
+                          id="profile-name" 
+                          value={userProfile.name}
+                          onChange={(e) => setUserProfile({...userProfile, name: e.target.value})}
+                          className="bg-gaming-light border-gaming-gray text-white mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="profile-email" className="text-white text-sm">Email</Label>
+                        <Input
+                          id="profile-email"
+                          value={userProfile.email}
+                          onChange={(e) => setUserProfile({...userProfile, email: e.target.value})}
+                          className="bg-gaming-light border-gaming-gray text-white mt-1"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex space-x-2">
+                      <Button 
+                        className="flex-1 bg-neon-green text-black hover:bg-neon-green/80 font-orbitron"
+                        onClick={() => alert('Профиль сохранен! 💾')}
+                      >
+                        Сохранить
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 neon-border text-neon-green"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        Закрыть
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
